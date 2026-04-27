@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    { "id": "Vision", "group": "topic" },
+    { "id": "Spatial UI", "group": "topic" },
+    { "id": "Plotly", "group": "tool" },
+    { "id": "Three.js", "group": "tool" },
+    { "id": "CSV ingest", "group": "pipeline" },
+    { "id": "Graph layout", "group": "pipeline" },
+    { "id": "LENS agent", "group": "ai" },
+    { "id": "SCOUT agent", "group": "ai" }
+  ],
+  "links": [
+    { "source": "Vision", "target": "Spatial UI" },
+    { "source": "Spatial UI", "target": "Plotly" },
+    { "source": "Spatial UI", "target": "Three.js" },
+    { "source": "CSV ingest", "target": "Graph layout" },
+    { "source": "Graph layout", "target": "Spatial UI" },
+    { "source": "LENS agent", "target": "CSV ingest" },
+    { "source": "SCOUT agent", "target": "Plotly" },
+    { "source": "Vision", "target": "LENS agent" }
+  ]
+}

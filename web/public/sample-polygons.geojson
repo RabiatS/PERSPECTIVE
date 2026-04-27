@@ -1,0 +1,69 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"district": "North", "sales_index": 112, "foot_traffic_k": 48},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-0.12, 51.52],
+            [-0.08, 51.52],
+            [-0.08, 51.55],
+            [-0.12, 51.55],
+            [-0.12, 51.52]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"district": "East", "sales_index": 96, "foot_traffic_k": 62},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-0.07, 51.51],
+            [-0.03, 51.51],
+            [-0.03, 51.54],
+            [-0.07, 51.54],
+            [-0.07, 51.51]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"district": "South", "sales_index": 134, "foot_traffic_k": 71},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-0.11, 51.48],
+            [-0.05, 51.48],
+            [-0.05, 51.51],
+            [-0.11, 51.51],
+            [-0.11, 51.48]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"district": "West", "sales_index": 88, "foot_traffic_k": 39},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-0.18, 51.5],
+            [-0.13, 51.5],
+            [-0.13, 51.53],
+            [-0.18, 51.53],
+            [-0.18, 51.5]
+          ]
+        ]
+      }
+    }
+  ]
+}

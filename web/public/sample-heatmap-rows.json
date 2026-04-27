@@ -1,0 +1,16 @@
+{
+  "rows": [
+    {"time_bin": 0, "freq_idx": 0, "amplitude": 0.12},
+    {"time_bin": 0, "freq_idx": 1, "amplitude": 0.25},
+    {"time_bin": 0, "freq_idx": 2, "amplitude": 0.35},
+    {"time_bin": 1, "freq_idx": 0, "amplitude": 0.18},
+    {"time_bin": 1, "freq_idx": 1, "amplitude": 0.42},
+    {"time_bin": 1, "freq_idx": 2, "amplitude": 0.55},
+    {"time_bin": 2, "freq_idx": 0, "amplitude": 0.22},
+    {"time_bin": 2, "freq_idx": 1, "amplitude": 0.58},
+    {"time_bin": 2, "freq_idx": 2, "amplitude": 0.72},
+    {"time_bin": 3, "freq_idx": 0, "amplitude": 0.15},
+    {"time_bin": 3, "freq_idx": 1, "amplitude": 0.48},
+    {"time_bin": 3, "freq_idx": 2, "amplitude": 0.68}
+  ]
+}

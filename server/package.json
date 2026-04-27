@@ -1,0 +1,13 @@
+{
+  "name": "spatial-viz-ai-gateway",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Server-side AI proxy: provider keys stay off the browser; single /v1/complete for the SPA",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

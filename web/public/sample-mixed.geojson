@@ -1,0 +1,31 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"site": "Hub A", "readings": 920, "value": 920},
+      "geometry": {"type": "Point", "coordinates": [-122.4194, 37.7749]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"zone": "Warehouse", "capacity": 4000, "value": 4000},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-122.405, 37.77],
+            [-122.395, 37.77],
+            [-122.395, 37.78],
+            [-122.405, 37.78],
+            [-122.405, 37.77]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"site": "Hub B", "readings": 540, "value": 540},
+      "geometry": {"type": "Point", "coordinates": [-118.2437, 34.0522]}
+    }
+  ]
+}

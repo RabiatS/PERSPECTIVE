@@ -1,0 +1,19 @@
+{
+  "label": "small dependency graph",
+  "nodes": [
+    {"id": "api", "kind": "service", "load": 0.72},
+    {"id": "db", "kind": "store", "load": 0.55},
+    {"id": "cache", "kind": "service", "load": 0.31},
+    {"id": "worker", "kind": "batch", "load": 0.88},
+    {"id": "queue", "kind": "bus", "load": 0.41},
+    {"id": "search", "kind": "service", "load": 0.64}
+  ],
+  "links": [
+    {"source": "api", "target": "db"},
+    {"source": "api", "target": "cache"},
+    {"source": "worker", "target": "db"},
+    {"source": "worker", "target": "queue"},
+    {"source": "api", "target": "search"},
+    {"source": "search", "target": "cache"}
+  ]
+}

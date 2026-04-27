@@ -1,0 +1,40 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"name": "Tokyo", "population_k": 37750, "value": 37750, "tier": "alpha"},
+      "geometry": {"type": "Point", "coordinates": [139.6503, 35.6762]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "São Paulo", "population_k": 22430, "value": 22430, "tier": "alpha"},
+      "geometry": {"type": "Point", "coordinates": [-46.6333, -23.5505]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Cairo", "population_k": 20490, "value": 20490, "tier": "alpha"},
+      "geometry": {"type": "Point", "coordinates": [31.2357, 30.0444]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Mumbai", "population_k": 20410, "value": 20410, "tier": "alpha"},
+      "geometry": {"type": "Point", "coordinates": [72.8777, 19.076]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "New York", "population_k": 18800, "value": 18800, "tier": "alpha"},
+      "geometry": {"type": "Point", "coordinates": [-74.006, 40.7128]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "London", "population_k": 9540, "value": 9540, "tier": "beta"},
+      "geometry": {"type": "Point", "coordinates": [-0.1276, 51.5074]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Nairobi", "population_k": 4735, "value": 4735, "tier": "gamma"},
+      "geometry": {"type": "Point", "coordinates": [36.8219, -1.2921]}
+    }
+  ]
+}
