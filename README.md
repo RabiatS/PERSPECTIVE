@@ -1,6 +1,6 @@
 # Perspective
 
-**A spatial canvas for data** — browser-native visualization with AI-assisted classification (LENS), anomaly highlights (SCOUT), sub-scenes (CURATOR), and export (BRIDGE). Upload tables, geospatial data, or audio; explore in 3D with orbit controls; share views or export a badge.
+**A spatial canvas for data**: browser-native visualization with AI-assisted classification (LENS), anomaly highlights (SCOUT), sub-scenes (CURATOR), and export (BRIDGE). Upload tables, geospatial data, or audio; explore in 3D with orbit controls; share views or export a badge.
 
 ## Screenshots
 
