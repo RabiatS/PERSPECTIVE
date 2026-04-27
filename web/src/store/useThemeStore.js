@@ -22,7 +22,7 @@ export const useThemeStore = create(
       },
     }),
     {
-      name: 'spatial-viz-theme',
+      name: 'perspective-theme',
       partialize: (s) => ({ theme: s.theme }),
       onRehydrateStorage: () => (state, error) => {
         if (!error && state?.theme) {

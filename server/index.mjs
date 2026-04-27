@@ -178,6 +178,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.error(
-    `[spatial-viz-ai-gateway] http://127.0.0.1:${PORT}  CORS ${ALLOW_ORIGIN}`,
+    `[perspective-ai-gateway] http://127.0.0.1:${PORT}  CORS ${ALLOW_ORIGIN}`,
   )
 })

@@ -215,7 +215,7 @@ body {
   animation: lens-slide-in 300ms ease-out forwards;
 }
 
-/* --- Landing (3D Data Vis) --- */
+/* --- Landing (Perspective) --- */
 .landing-root {
   --color-bg-primary: var(--r-void, #0a0a0a);
   --color-bg-elevated: var(--r-obsidian, #141414);

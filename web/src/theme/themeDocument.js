@@ -1,5 +1,5 @@
 /** Must match `name` in useThemeStore persist config */
-export const THEME_STORAGE_KEY = 'spatial-viz-theme'
+export const THEME_STORAGE_KEY = 'perspective-theme'
 
 /**
  * Read theme from zustand-persist JSON before React hydrates (avoids flash).

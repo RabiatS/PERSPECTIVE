@@ -444,7 +444,7 @@ export function BadgeExport() {
             textTransform: 'uppercase',
           }}
         >
-          SPATIAL VIZ
+          PERSPECTIVE
         </div>
       </div>
 

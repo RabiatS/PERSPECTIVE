@@ -11,7 +11,7 @@ export function LandingPage() {
     <div className="landing-root">
       <header className="landing-nav">
         <div className="landing-nav-inner">
-          <span className="landing-logo">3D Data Vis</span>
+          <span className="landing-logo">Perspective</span>
           <nav className="landing-nav-links">
             <ThemeToggle variant="nav" />
             <a className="landing-nav-ghost" href="#how-it-works">
@@ -31,7 +31,7 @@ export function LandingPage() {
         <section className="landing-hero">
           <div className="landing-hero-grid">
             <div className="landing-hero-copy">
-              <p className="landing-eyebrow">Browser-native · Spatial · AI-assisted</p>
+              <p className="landing-eyebrow">A spatial canvas for data</p>
               <h1 className="landing-title">
                 See your data as a world you can{' '}
                 <span className="landing-title-accent">move through</span>
@@ -138,7 +138,7 @@ export function LandingPage() {
             <div>
               <h2 className="landing-h2 landing-h2-inline">Ready to walk your dataset?</h2>
               <p className="landing-sub landing-sub-cta">
-                Placeholder name: <strong>3D Data Vis</strong> — the workspace is live in this repo.
+                <strong>Perspective</strong> — a spatial canvas for data. The workspace is live in this repo.
               </p>
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -154,7 +154,7 @@ export function LandingPage() {
       </main>
 
       <footer className="landing-footer">
-        <span>3D Data Vis — spatial visualization in the browser</span>
+        <span>Perspective — a spatial canvas for data</span>
         <Link to="/app">Workspace</Link>
       </footer>
     </div>
