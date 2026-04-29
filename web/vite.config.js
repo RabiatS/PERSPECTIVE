@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => {
     ''
 
   return {
+    base: env.VITE_BASE_PATH || '/',
     test: {
       environment: 'node',
       include: ['src/**/*.test.js'],
