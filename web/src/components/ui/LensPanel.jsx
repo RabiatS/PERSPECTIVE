@@ -472,6 +472,7 @@ function LensPanelSuccess({
   const [badgeOpen, setBadgeOpen] = useState(false)
   const [updateBusy, setUpdateBusy] = useState(false)
   const [downloadDone, setDownloadDone] = useState(false)
+  const [reasoningOpen, setReasoningOpen] = useState(false)
 
   useEffect(() => {
     if (!badgeOpen) return
@@ -524,34 +525,36 @@ function LensPanelSuccess({
 
   return (
     <LensPanelShell sidebar={sidebar}>
+
+      {/* ── Alerts (low confidence / warnings) ─────────────────────── */}
       {lowConfidence && (
         <div
           style={{
-            marginBottom: 12,
-            padding: '10px 12px',
+            marginBottom: 10,
+            padding: '8px 10px',
             borderRadius: 8,
-            border: '1px solid rgba(255, 107, 53, 0.55)',
-            background: 'rgba(255, 107, 53, 0.12)',
+            border: '1px solid rgba(255, 107, 53, 0.5)',
+            background: 'rgba(255, 107, 53, 0.1)',
             fontFamily: "'DM Mono', ui-monospace, monospace",
-            fontSize: 11,
+            fontSize: 10,
             color: '#FF9B70',
-            lineHeight: 1.45,
+            lineHeight: 1.4,
           }}
         >
-          <strong style={{ color: '#A81C1C' }}>Low confidence ({conf.toFixed(2)})</strong>
-          — review axis mapping and chart type before rendering.
+          <strong style={{ color: '#A81C1C' }}>Low confidence {conf.toFixed(2)}</strong>
+          {' — '}review axes before rendering.
         </div>
       )}
       {lensWarnings.length > 0 && (
         <div
           style={{
-            marginBottom: 12,
-            padding: '8px 10px',
+            marginBottom: 10,
+            padding: '7px 9px',
             borderRadius: 8,
-            border: '1px solid rgba(255, 184, 0, 0.4)',
-            background: 'rgba(255, 184, 0, 0.08)',
+            border: '1px solid rgba(255, 184, 0, 0.35)',
+            background: 'rgba(255, 184, 0, 0.07)',
             fontFamily: "'DM Mono', ui-monospace, monospace",
-            fontSize: 10,
+            fontSize: 9,
             color: '#FFB800',
             lineHeight: 1.4,
           }}
@@ -561,147 +564,98 @@ function LensPanelSuccess({
           ))}
         </div>
       )}
-      <div
-        style={{
-          fontFamily: "'Bebas Neue', system-ui, sans-serif",
-          fontWeight: 700,
-          fontSize: 10,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--ui-accent)',
-          marginBottom: 14,
-        }}
-      >
-        LENS ANALYSIS
-      </div>
 
-      <div
-        style={{
-          fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontSize: 11,
-          color: 'var(--ui-text-hint)',
-          marginBottom: 12,
-          lineHeight: 1.4,
-        }}
-      >
-        <span style={{ color: 'var(--ui-text-strong)' }}>
-          {datasetMeta?.name ?? 'Dataset'}
-        </span>
-        <span style={{ color: 'var(--ui-text-subtle)' }}> · </span>
-        <span>{uploadedData?.rowCount ?? 0} rows</span>
-      </div>
-
-      {(uploadedData?.rowCount ?? 0) > MAX_ROWS_BEFORE_SAMPLE && (
+      {/* ── 1. Dataset identity row ─────────────────────────────────── */}
+      <div style={{ marginBottom: 14 }}>
         <div
           style={{
-            fontFamily: "'DM Mono', ui-monospace, monospace",
-            fontSize: 10,
-            color: 'var(--ui-text-muted)',
-            marginBottom: 12,
-            lineHeight: 1.4,
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            gap: 8,
+            marginBottom: 6,
           }}
         >
-          Showing {SAMPLE_SIZE.toLocaleString()} of{' '}
-          {(uploadedData?.rowCount ?? 0).toLocaleString()} rows (sampled)
-        </div>
-      )}
-
-      {(() => {
-        const rawType = String(lensOutput.dataType ?? '')
-        const meta = DATA_TYPE_META[rawType]
-        return (
-          <div
+          <span
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              marginBottom: 14,
-              padding: '8px 12px',
-              borderRadius: 8,
-              background: 'var(--ui-surface-chip)',
-              border: '1px solid var(--ui-accent-border)',
-              color: 'var(--ui-accent)',
+              fontFamily: "'DM Mono', ui-monospace, monospace",
+              fontSize: 11,
+              fontWeight: 600,
+              color: 'var(--ui-text-strong)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              minWidth: 0,
             }}
           >
-            {meta ? meta.icon : null}
-            <div style={{ minWidth: 0 }}>
-              <div
-                style={{
-                  fontFamily: "'DM Mono', ui-monospace, monospace",
-                  fontSize: 10,
-                  letterSpacing: '0.06em',
-                  fontWeight: 600,
-                  lineHeight: 1,
-                  marginBottom: meta ? 3 : 0,
-                }}
-              >
-                {meta ? meta.label : rawType}
-              </div>
-              {meta && (
-                <div
-                  style={{
-                    fontFamily: "'DM Mono', ui-monospace, monospace",
-                    fontSize: 9,
-                    color: 'var(--ui-text-subtle)',
-                    letterSpacing: '0.03em',
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {meta.desc}
-                </div>
-              )}
-            </div>
-          </div>
-        )
-      })()}
+            {datasetMeta?.name ?? 'Dataset'}
+          </span>
+          <span
+            style={{
+              fontFamily: "'DM Mono', ui-monospace, monospace",
+              fontSize: 10,
+              color: 'var(--ui-text-faint)',
+              flexShrink: 0,
+            }}
+          >
+            {(uploadedData?.rowCount ?? 0) > MAX_ROWS_BEFORE_SAMPLE
+              ? `${SAMPLE_SIZE.toLocaleString()} / ${(uploadedData?.rowCount ?? 0).toLocaleString()} rows`
+              : `${uploadedData?.rowCount ?? 0} rows`}
+          </span>
+        </div>
 
-      <div
-        style={{
-          fontFamily: "'Bebas Neue', system-ui, sans-serif",
-          fontWeight: 600,
-          fontSize: 18,
-          color: 'var(--ui-text-on-accent)',
-          marginBottom: 10,
-          lineHeight: 1.25,
-        }}
-      >
-        {formatChartTitle(chartChoice)}
+        {/* Data type — compact inline pill */}
+        {(() => {
+          const rawType = String(lensOutput.dataType ?? '')
+          const meta = DATA_TYPE_META[rawType]
+          return (
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                padding: '2px 8px 2px 6px',
+                borderRadius: 999,
+                background: 'var(--ui-surface-chip)',
+                border: '1px solid var(--ui-accent-border)',
+                fontFamily: "'DM Mono', ui-monospace, monospace",
+                fontSize: 9,
+                color: 'var(--ui-accent)',
+                letterSpacing: '0.04em',
+              }}
+            >
+              {meta ? meta.icon : null}
+              {meta ? meta.label : rawType}
+            </span>
+          )
+        })()}
       </div>
 
-      <p
-        style={{
-          margin: '0 0 16px',
-          fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontSize: 13,
-          color: 'var(--ui-text-muted)',
-          lineHeight: 1.5,
-        }}
-      >
-        {String(lensOutput.reasoning ?? '')}
-      </p>
+      {/* ── Divider ─────────────────────────────────────────────────── */}
+      <div style={{ height: 1, background: 'var(--ui-divider)', marginBottom: 14 }} />
 
+      {/* ── 2. Visualization config ─────────────────────────────────── */}
       <div
         style={{
           fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontSize: 10,
-          color: 'var(--ui-text-subtle)',
-          letterSpacing: '0.06em',
-          marginBottom: 6,
+          fontSize: 9,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--ui-text-faint)',
+          marginBottom: 5,
         }}
       >
-        CHART TYPE
+        Chart Type
       </div>
       <select
         value={chartChoice}
-        onChange={(e) =>
-          setChartChoice(/** @type {never} */ (e.target.value))
-        }
+        onChange={(e) => setChartChoice(/** @type {never} */ (e.target.value))}
         style={{
           width: '100%',
-          marginBottom: 14,
+          marginBottom: 12,
           fontFamily: "'DM Mono', ui-monospace, monospace",
           fontSize: 11,
-          padding: '8px 10px',
+          padding: '7px 9px',
           borderRadius: 6,
           border: '1px solid var(--ui-accent-border-soft)',
           background: 'var(--ui-surface-input)',
@@ -709,61 +663,47 @@ function LensPanelSuccess({
         }}
       >
         {chartTypeOptions.map(([id, label]) => (
-          <option key={id} value={id}>
-            {label}
-          </option>
+          <option key={id} value={id}>{label}</option>
         ))}
       </select>
 
       <div
         style={{
           fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontSize: 10,
-          color: 'var(--ui-text-subtle)',
-          letterSpacing: '0.06em',
-          marginBottom: 8,
+          fontSize: 9,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--ui-text-faint)',
+          marginBottom: 7,
         }}
       >
-        AXIS MAPPING
-        <span
-          style={{
-            display: 'block',
-            fontSize: 9,
-            letterSpacing: '0.04em',
-            color: 'var(--ui-text-faint)',
-            marginTop: 4,
-            lineHeight: 1.45,
-            fontWeight: 400,
-          }}
-        >
-          3D views use three channels (X, Y, Z). Extra columns remain in the dataset for agents and exports
-        </span>
+        Axes
       </div>
-
-      {(
-        /** @type {const} */ ([
-          ['X', 'x'],
-          ['Y', 'y'],
-          ['Z', 'z'],
-        ])
-      ).map(([label, key]) => (
+      {(/** @type {const} */ ([['X', 'x'], ['Y', 'y'], ['Z', 'z']])).map(([label, key]) => (
         <label
           key={key}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            marginBottom: 8,
-            fontSize: 11,
-            color: 'var(--ui-text-label)',
+            gap: 8,
+            marginBottom: 6,
           }}
         >
-          <span style={{ width: 18 }}>{label}</span>
+          <span
+            style={{
+              width: 14,
+              fontFamily: "'DM Mono', ui-monospace, monospace",
+              fontSize: 9,
+              color: 'var(--ui-accent)',
+              letterSpacing: '0.06em',
+              flexShrink: 0,
+            }}
+          >
+            {label}
+          </span>
           <select
             value={axis[key]}
-            onChange={(e) =>
-              setAxis((a) => ({ ...a, [key]: e.target.value }))
-            }
+            onChange={(e) => setAxis((a) => ({ ...a, [key]: e.target.value }))}
             style={{
               flex: 1,
               fontFamily: "'DM Mono', ui-monospace, monospace",
@@ -778,29 +718,25 @@ function LensPanelSuccess({
             {axisSelectCols.length === 0 ? (
               <option value="">No plottable columns</option>
             ) : (
-              axisSelectCols.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))
+              axisSelectCols.map((c) => <option key={c} value={c}>{c}</option>)
             )}
           </select>
         </label>
       ))}
 
+      {/* Data quality alerts */}
       {(nullWarnings.length > 0 || outliers.length > 0) && (
         <div
           style={{
-            marginTop: 12,
-            marginBottom: 16,
+            margin: '8px 0 4px',
             fontFamily: "'DM Mono', ui-monospace, monospace",
-            fontSize: 11,
+            fontSize: 10,
             color: '#FFB800',
             lineHeight: 1.45,
           }}
         >
           {nullWarnings.length > 0 && (
-            <div style={{ marginBottom: outliers.length ? 8 : 0 }}>
+            <div style={{ marginBottom: outliers.length ? 6 : 0 }}>
               <strong>Nulls:</strong>{' '}
               {nullWarnings.map((n) => `${n.column} (${n.nullCount})`).join(', ')}
             </div>
@@ -814,92 +750,151 @@ function LensPanelSuccess({
         </div>
       )}
 
+      {/* ── 3. Primary action ───────────────────────────────────────── */}
       <button
         type="button"
         onClick={onRender}
         disabled={updateBusy}
         style={{
           width: '100%',
-          marginTop: 4,
-          padding: '12px 14px',
+          marginTop: 12,
+          padding: '11px 14px',
           fontFamily: "'Bebas Neue', system-ui, sans-serif",
-          fontWeight: 600,
-          fontSize: 11,
-          letterSpacing: '0.1em',
+          fontWeight: 700,
+          fontSize: 13,
+          letterSpacing: '0.12em',
           textTransform: 'uppercase',
-          color: updateBusy ? 'var(--ui-text-muted)' : 'var(--ui-accent)',
-          background: updateBusy ? 'var(--ui-accent-dim)' : 'transparent',
-          border: '1px solid var(--ui-accent-border)',
+          color: updateBusy ? 'var(--ui-text-subtle)' : '#ffffff',
+          background: updateBusy ? 'var(--ui-surface-muted)' : 'var(--ui-accent)',
+          border: 'none',
           borderRadius: 8,
           cursor: updateBusy ? 'wait' : 'pointer',
-          transition: 'box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease',
+          transition: 'opacity 0.15s ease, box-shadow 0.15s ease',
+          opacity: updateBusy ? 0.6 : 1,
         }}
         onMouseEnter={(e) => {
           if (updateBusy) return
-          e.currentTarget.style.boxShadow = `0 0 24px var(--ui-accent-glow)`
-          e.currentTarget.style.background = 'var(--ui-accent-dim)'
+          e.currentTarget.style.opacity = '0.88'
+          e.currentTarget.style.boxShadow = '0 4px 16px var(--ui-accent-glow)'
         }}
         onMouseLeave={(e) => {
           if (updateBusy) return
+          e.currentTarget.style.opacity = '1'
           e.currentTarget.style.boxShadow = 'none'
-          e.currentTarget.style.background = 'transparent'
         }}
       >
         {updateBusy ? 'Rendering…' : 'Update scene'}
       </button>
 
-      <button
-        type="button"
-        onClick={() => {
-          const report = buildInsightReportFromWorkspace(useSceneStore.getState())
-          const base = sanitizeFilename(datasetMeta?.name ?? 'dataset', 'dataset')
-          downloadInsightReportJson(report, base)
-          setDownloadDone(true)
-          setTimeout(() => setDownloadDone(false), 2500)
-        }}
-        style={{
-          width: '100%',
-          marginTop: 8,
-          padding: '10px 14px',
-          fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontWeight: 600,
-          fontSize: 10,
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: downloadDone ? '#4ade80' : 'var(--ui-accent)',
-          background: downloadDone ? 'rgba(74, 222, 128, 0.08)' : 'var(--ui-accent-dim)',
-          border: downloadDone
-            ? '1px solid rgba(74, 222, 128, 0.4)'
-            : '1px solid var(--ui-accent-border)',
-          borderRadius: 8,
-          cursor: 'pointer',
-          transition: 'color 0.3s ease, background 0.3s ease, border-color 0.3s ease',
-        }}
-      >
-        {downloadDone ? 'Saved to downloads' : 'Download insight JSON'}
-      </button>
+      {/* ── Divider ─────────────────────────────────────────────────── */}
+      <div style={{ height: 1, background: 'var(--ui-divider)', margin: '14px 0 10px' }} />
 
+      {/* ── 4. Collapsible reasoning ────────────────────────────────── */}
       <button
         type="button"
-        onClick={() => setBadgeOpen(true)}
+        onClick={() => setReasoningOpen((o) => !o)}
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           width: '100%',
-          marginTop: 10,
-          padding: '10px 14px',
-          fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontWeight: 600,
-          fontSize: 10,
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: '#A81C1C',
-          background: 'rgba(168, 28, 28, 0.06)',
-          border: '1px solid rgba(168, 28, 28, 0.45)',
-          borderRadius: 8,
+          background: 'none',
+          border: 'none',
+          padding: '2px 0',
           cursor: 'pointer',
+          fontFamily: "'DM Mono', ui-monospace, monospace",
+          fontSize: 9,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--ui-text-faint)',
+          marginBottom: reasoningOpen ? 6 : 0,
         }}
       >
-        Export badge
+        <span>LENS Reasoning</span>
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          aria-hidden="true"
+          style={{
+            transition: 'transform 0.18s ease',
+            transform: reasoningOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          }}
+        >
+          <path
+            d="M2 3.5L5 6.5L8 3.5"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
+      {reasoningOpen && (
+        <p
+          style={{
+            margin: '0 0 4px',
+            fontFamily: "'DM Mono', ui-monospace, monospace",
+            fontSize: 10,
+            color: 'var(--ui-text-muted)',
+            lineHeight: 1.55,
+          }}
+        >
+          {String(lensOutput.reasoning ?? '')}
+        </p>
+      )}
+
+      {/* ── 5. Secondary actions — side by side ─────────────────────── */}
+      <div style={{ display: 'flex', gap: 7, marginTop: 12 }}>
+        <button
+          type="button"
+          onClick={() => {
+            const report = buildInsightReportFromWorkspace(useSceneStore.getState())
+            const base = sanitizeFilename(datasetMeta?.name ?? 'dataset', 'dataset')
+            downloadInsightReportJson(report, base)
+            setDownloadDone(true)
+            setTimeout(() => setDownloadDone(false), 2500)
+          }}
+          style={{
+            flex: 1,
+            padding: '8px 6px',
+            fontFamily: "'DM Mono', ui-monospace, monospace",
+            fontSize: 9,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: downloadDone ? '#4ade80' : 'var(--ui-accent)',
+            background: downloadDone ? 'rgba(74, 222, 128, 0.07)' : 'var(--ui-accent-dim)',
+            border: downloadDone
+              ? '1px solid rgba(74, 222, 128, 0.35)'
+              : '1px solid var(--ui-accent-border)',
+            borderRadius: 7,
+            cursor: 'pointer',
+            transition: 'color 0.25s, background 0.25s, border-color 0.25s',
+          }}
+        >
+          {downloadDone ? '✓ Saved' : 'JSON'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setBadgeOpen(true)}
+          style={{
+            flex: 1,
+            padding: '8px 6px',
+            fontFamily: "'DM Mono', ui-monospace, monospace",
+            fontSize: 9,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: '#A81C1C',
+            background: 'rgba(168, 28, 28, 0.06)',
+            border: '1px solid rgba(168, 28, 28, 0.35)',
+            borderRadius: 7,
+            cursor: 'pointer',
+          }}
+        >
+          Badge
+        </button>
+      </div>
 
       {badgeOpen && (
         <div
