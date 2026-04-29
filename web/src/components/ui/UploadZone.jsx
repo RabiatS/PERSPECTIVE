@@ -1,9 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
 import { importDatasetFile } from '../../utils/importDatasetFile.js'
 import { useSceneStore } from '../../store/useSceneStore.js'
-
-const SAMPLE_FILE = '/sample-spatial-dataset.csv'
-const SAMPLE_NAME = 'sample-spatial-dataset.csv'
+import {
+  SAMPLE_SPATIAL_DATASET_NAME,
+  SAMPLE_SPATIAL_DATASET_URL,
+} from '../../config/sampleDataset.js'
 
 export function UploadZone() {
   const inputRef = useRef(null)
@@ -36,10 +37,10 @@ export function UploadZone() {
     setError(null)
     setParsing(true)
     try {
-      const resp = await fetch(SAMPLE_FILE)
+      const resp = await fetch(SAMPLE_SPATIAL_DATASET_URL)
       if (!resp.ok) throw new Error(`Sample fetch failed: ${resp.status}`)
       const blob = await resp.blob()
-      const file = new File([blob], SAMPLE_NAME, { type: 'text/csv' })
+      const file = new File([blob], SAMPLE_SPATIAL_DATASET_NAME, { type: 'text/csv' })
       await processFile(file)
     } catch (e) {
       setParsing(false)
@@ -175,7 +176,7 @@ export function UploadZone() {
               fontSize: 12,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: '#8A8A9A',
+              color: 'var(--ui-text-muted)',
             }}
           >
             DROP DATASET HERE

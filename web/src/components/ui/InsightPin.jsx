@@ -7,7 +7,7 @@ import { useState } from 'react'
  */
 export function InsightPin({ pin }) {
   const [expanded, setExpanded] = useState(false)
-  const accent = pin.kind === 'correlation' ? '#A81C1C' : '#FF6B35'
+  const accent = pin.kind === 'correlation' ? '#B85C5C' : '#A81C1C'
   const border = `1px solid ${accent}55`
 
   return (
@@ -39,8 +39,9 @@ export function InsightPin({ pin }) {
         >
           <div
             style={{
-              fontSize: 9,
-              letterSpacing: '0.08em',
+              fontFamily: "'Bebas Neue', system-ui, sans-serif",
+              fontSize: 10,
+              letterSpacing: '0.1em',
               color: accent,
               marginBottom: 4,
               textTransform: 'uppercase',
@@ -63,7 +64,7 @@ export function InsightPin({ pin }) {
               style={{
                 marginTop: 10,
                 fontSize: 10,
-                color: '#8A8A9A',
+                color: 'var(--ui-text-muted)',
                 lineHeight: 1.45,
               }}
             >

@@ -9,9 +9,12 @@ import { applyDocumentTheme, readInitialTheme } from './theme/themeDocument.js'
 
 applyDocumentTheme(readInitialTheme())
 
+const routerBasename =
+  import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename}>
       <ThemeSync />
       <Routes>
         <Route path="/" element={<LandingPage />} />

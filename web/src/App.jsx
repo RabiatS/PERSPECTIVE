@@ -15,9 +15,10 @@ import { CameraPresets } from './components/ui/CameraPresets.jsx'
 import { XrEntry } from './components/ui/XrEntry.jsx'
 import { ThemeToggle } from './components/ui/ThemeToggle.jsx'
 import { SceneNavigateHint } from './components/ui/SceneNavigateHint.jsx'
-
-const DEMO_SAMPLE = '/sample-spatial-dataset.csv'
-const DEMO_SAMPLE_NAME = 'sample-spatial-dataset.csv'
+import {
+  SAMPLE_SPATIAL_DATASET_NAME,
+  SAMPLE_SPATIAL_DATASET_URL,
+} from './config/sampleDataset.js'
 
 const SIDEBAR_WIDTH = 300
 
@@ -35,12 +36,12 @@ export default function App() {
     demoLoadedRef.current = true
     void (async () => {
       try {
-        const resp = await fetch(DEMO_SAMPLE)
+        const resp = await fetch(SAMPLE_SPATIAL_DATASET_URL)
         if (!resp.ok) return
         const blob = await resp.blob()
-        const file = new File([blob], DEMO_SAMPLE_NAME, { type: 'text/csv' })
+        const file = new File([blob], SAMPLE_SPATIAL_DATASET_NAME, { type: 'text/csv' })
         const parsed = await importDatasetFile(file)
-        setParsedDataset(parsed, { name: DEMO_SAMPLE_NAME })
+        setParsedDataset(parsed, { name: SAMPLE_SPATIAL_DATASET_NAME })
       } catch {
         // silently skip if sample unavailable
       }

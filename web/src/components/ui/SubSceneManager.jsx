@@ -73,9 +73,9 @@ export function SubSceneManager() {
             value={s.label}
             onChange={(e) => renameSubScene(s.id, e.target.value)}
             style={{
-              background: 'rgba(20,20,28,0.9)',
+              background: 'var(--ui-surface-input)',
               border: '1px solid rgba(168,28,28,0.3)',
-              color: '#e0e0e8',
+              color: 'var(--ui-text-body)',
               borderRadius: 6,
               padding: '4px 8px',
               fontSize: 11,
@@ -121,8 +121,8 @@ export function SubSceneManager() {
                 padding: '4px 8px',
                 fontSize: 9,
                 background: 'transparent',
-                border: '1px solid rgba(255,107,53,0.4)',
-                color: '#FF6B35',
+                border: '1px solid rgba(168, 28, 28, 0.45)',
+                color: '#A81C1C',
                 borderRadius: 6,
                 cursor: 'pointer',
               }}

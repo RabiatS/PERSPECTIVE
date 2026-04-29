@@ -235,7 +235,7 @@ export function VrSceneLayer() {
       {/* ── SCOUT anomaly / correlation pins ─────────────────────── */}
       {scoutPins.map((pin) => {
         const vrPos = dataPosToVr(pin.position, xR, yR, zR)
-        const accent = pin.kind === 'correlation' ? '#A81C1C' : '#FF6B35'
+        const accent = pin.kind === 'correlation' ? '#B85C5C' : '#A81C1C'
         return (
           <group key={pin.id} position={vrPos}>
             {/* Glowing sphere */}

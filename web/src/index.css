@@ -223,7 +223,7 @@ body {
   --color-accent-green: #4ecdc4;
   --color-accent-purple: var(--r-bloodline, #a81c1c);
   --color-text-primary: var(--r-bone, #f5f5f0);
-  --color-text-secondary: #8a8a8a;
+  --color-text-secondary: #9ca8a0;
   --color-border-subtle: rgba(245, 245, 240, 0.07);
   --radius-sm: 6px;
   --radius-md: 12px;
@@ -320,8 +320,8 @@ body {
   padding: 10px 18px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-accent-cyan);
-  background: rgba(94, 234, 212, 0.08);
-  box-shadow: 0 0 0 0 rgba(94, 234, 212, 0);
+  background: color-mix(in srgb, var(--color-accent-cyan) 10%, transparent);
+  box-shadow: 0 0 0 0 transparent;
   transition:
     box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background 180ms ease;
@@ -329,7 +329,7 @@ body {
 
 .landing-nav-cta:hover {
   box-shadow: var(--shadow-neon-cyan);
-  background: rgba(94, 234, 212, 0.14);
+  background: color-mix(in srgb, var(--color-accent-cyan) 16%, transparent);
 }
 
 .landing-hero {
@@ -361,22 +361,28 @@ body {
   margin: 0 0 16px;
 }
 
+.landing-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .landing-title {
   font-family: 'Bebas Neue', system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(2rem, 4vw, 3.1rem);
   line-height: 1.08;
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   max-width: 15ch;
 }
 
 .landing-title-accent {
   color: var(--color-accent-green);
-  text-shadow: 0 0 40px rgba(94, 234, 212, 0.25);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--color-accent-green) 30%, transparent);
 }
 
 .landing-lead {
-  margin: 0 0 28px;
+  margin: 0 0 24px;
   max-width: 52ch;
   font-size: 0.95rem;
   line-height: 1.65;
@@ -412,13 +418,13 @@ body {
 
 .landing-btn-primary {
   color: var(--color-text-primary);
-  background: rgba(94, 234, 212, 0.12);
+  background: color-mix(in srgb, var(--color-accent-cyan) 13%, transparent);
   border-color: var(--color-accent-cyan);
 }
 
 .landing-btn-primary:hover {
   box-shadow: var(--shadow-neon-cyan);
-  background: rgba(94, 234, 212, 0.18);
+  background: color-mix(in srgb, var(--color-accent-cyan) 20%, transparent);
 }
 
 .landing-btn-secondary {
@@ -429,7 +435,7 @@ body {
 
 .landing-btn-secondary:hover {
   color: var(--color-text-primary);
-  border-color: rgba(94, 234, 212, 0.35);
+  border-color: color-mix(in srgb, var(--color-accent-cyan) 45%, transparent);
 }
 
 .landing-btn-large {
@@ -467,7 +473,7 @@ body {
   position: relative;
   border-radius: var(--radius-md);
   overflow: hidden;
-  border: 1px solid rgba(94, 234, 212, 0.18);
+  border: 1px solid color-mix(in srgb, var(--color-accent-cyan) 22%, transparent);
   background: #050508;
   min-height: 380px;
   aspect-ratio: 1;
@@ -497,10 +503,8 @@ body {
   font-size: 0.78rem;
   line-height: 1.55;
   color: var(--color-text-secondary);
-  max-width: 42ch;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+  max-width: 48ch;
+  text-align: left;
 }
 
 .landing-section {
@@ -614,7 +618,7 @@ body {
 .landing-card {
   padding: 22px 20px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(94, 234, 212, 0.12);
+  border: 1px solid color-mix(in srgb, var(--color-accent-cyan) 15%, transparent);
   background: linear-gradient(165deg, rgba(17, 17, 22, 0.95) 0%, rgba(10, 10, 15, 0.75) 100%);
 }
 
@@ -642,9 +646,9 @@ body {
   gap: 24px;
   padding: 32px 28px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(94, 234, 212, 0.2);
-  background: rgba(94, 234, 212, 0.05);
-  box-shadow: 0 0 40px rgba(94, 234, 212, 0.08);
+  border: 1px solid color-mix(in srgb, var(--color-accent-cyan) 24%, transparent);
+  background: color-mix(in srgb, var(--color-accent-cyan) 6%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--color-accent-cyan) 10%, transparent);
 }
 
 .landing-footer {
@@ -739,10 +743,12 @@ html[data-theme='light'] .theme-toggle--nav:hover {
 html[data-theme='light'] .landing-root {
   --color-bg-primary: #ececf2;
   --color-bg-elevated: #e2e4ee;
+  --color-accent-cyan: #007a8a;
+  --color-accent-green: #007a8a;
   --color-text-primary: #111116;
-  --color-text-secondary: #5c5c6e;
+  --color-text-secondary: #4f5568;
   --color-border-subtle: rgba(0, 0, 0, 0.08);
-  --shadow-neon-cyan: 0 0 18px rgba(0, 160, 175, 0.35);
+  --shadow-neon-cyan: 0 0 20px rgba(0, 130, 145, 0.28);
 }
 
 html[data-theme='light'] .landing-root::before {
@@ -773,9 +779,9 @@ html[data-theme='light'] .landing-card {
 }
 
 html[data-theme='light'] .landing-cta-inner {
-  border: 1px solid rgba(0, 130, 145, 0.28);
-  background: rgba(0, 200, 210, 0.08);
-  box-shadow: 0 0 32px rgba(0, 160, 175, 0.1);
+  border: 1px solid rgba(94, 234, 212, 0.28);
+  background: rgba(94, 234, 212, 0.06);
+  box-shadow: 0 0 32px rgba(94, 234, 212, 0.08);
 }
 
 html[data-theme='light'] .landing-btn-secondary:hover {

@@ -50,6 +50,75 @@ function formatChartTitle(id) {
 /** Dedupes auto-render across React StrictMode’s double mount (dev). */
 const lensSessionsAutoRendered = new Set()
 
+/** Metadata for each LENS data type — icon (inline SVG), readable label, one-line descriptor. */
+const DATA_TYPE_META = /** @type {Record<string, { label: string; desc: string; icon: import('react').ReactElement }>} */ ({
+  tabular: {
+    label: 'Tabular',
+    desc: 'Rows & columns — standard dataset',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <rect x="0.5" y="0.5" width="4.5" height="4.5" rx="0.75" fill="currentColor" opacity="0.9" />
+        <rect x="7" y="0.5" width="4.5" height="4.5" rx="0.75" fill="currentColor" opacity="0.55" />
+        <rect x="0.5" y="7" width="4.5" height="4.5" rx="0.75" fill="currentColor" opacity="0.55" />
+        <rect x="7" y="7" width="4.5" height="4.5" rx="0.75" fill="currentColor" opacity="0.9" />
+      </svg>
+    ),
+  },
+  'time-series': {
+    label: 'Time Series',
+    desc: 'Ordered by time — trends & seasonality',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <polyline
+          points="0.5,9.5 2.5,5.5 5,7.5 7.5,2.5 11.5,4.5"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  geographic: {
+    label: 'Geographic',
+    desc: 'Lat / lng — spatial patterns',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.3" />
+        <ellipse cx="6" cy="6" rx="2.4" ry="5" stroke="currentColor" strokeWidth="1.1" />
+        <line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" strokeWidth="1.1" />
+      </svg>
+    ),
+  },
+  audio: {
+    label: 'Audio',
+    desc: 'Waveform or spectral data',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <rect x="0" y="4.5" width="1.8" height="3" rx="0.9" fill="currentColor" opacity="0.6" />
+        <rect x="2.5" y="2.5" width="1.8" height="7" rx="0.9" fill="currentColor" opacity="0.8" />
+        <rect x="5.1" y="0.5" width="1.8" height="11" rx="0.9" fill="currentColor" />
+        <rect x="7.7" y="2.5" width="1.8" height="7" rx="0.9" fill="currentColor" opacity="0.8" />
+        <rect x="10.2" y="4.5" width="1.8" height="3" rx="0.9" fill="currentColor" opacity="0.6" />
+      </svg>
+    ),
+  },
+  graph: {
+    label: 'Graph / Network',
+    desc: 'Nodes & edges — relationships',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <circle cx="6" cy="1.8" r="1.5" fill="currentColor" />
+        <circle cx="1.8" cy="9.5" r="1.5" fill="currentColor" />
+        <circle cx="10.2" cy="9.5" r="1.5" fill="currentColor" />
+        <line x1="6" y1="3.3" x2="1.8" y2="8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="6" y1="3.3" x2="10.2" y2="8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="3.3" y1="9.5" x2="8.7" y2="9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+})
+
 /** Chart type override options (value, label). */
 const CHART_TYPE_OPTIONS = /** @type {const} */ ([
   ['scatter3d', 'Scatter 3D'],
@@ -143,26 +212,30 @@ const DRAG_HANDLE_STYLE = {
 }
 
 /**
- * Draggable shell: fixed default slot (bottom-right); drag header to move; Default slot resets dock.
- * When `sidebar` is true, renders as a plain scrollable container (no dragging, no fixed position).
- * @param {{ children: import('react').ReactNode; sidebar?: boolean }} props
+ * Sidebar variant — plain scrollable container, no drag, no fixed position.
+ * @param {{ children: import('react').ReactNode }} props
  */
-function LensPanelShell({ children, sidebar = false }) {
-  if (sidebar) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          overflowY: 'auto',
-          padding: '12px 16px 24px',
-          boxSizing: 'border-box',
-        }}
-      >
-        {children}
-      </div>
-    )
-  }
+function LensPanelSidebarShell({ children }) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        overflowY: 'auto',
+        padding: '12px 16px 24px',
+        boxSizing: 'border-box',
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
+/**
+ * Draggable shell: fixed default slot (bottom-right); drag header to move; Default slot resets dock.
+ * @param {{ children: import('react').ReactNode }} props
+ */
+function LensPanelDraggableShell({ children }) {
   const is2DMode = useSceneStore((s) => s.is2DMode)
   const rootRef = useRef(/** @type {HTMLDivElement | null} */ (null))
   const [panelPos, setPanelPos] = useState(() => {
@@ -349,6 +422,18 @@ function LensPanelShell({ children, sidebar = false }) {
 }
 
 /**
+ * Draggable shell: fixed default slot (bottom-right); drag header to move; Default slot resets dock.
+ * When `sidebar` is true, renders as a plain scrollable container (no dragging, no fixed position).
+ * @param {{ children: import('react').ReactNode; sidebar?: boolean }} props
+ */
+function LensPanelShell({ children, sidebar = false }) {
+  if (sidebar) {
+    return <LensPanelSidebarShell>{children}</LensPanelSidebarShell>
+  }
+  return <LensPanelDraggableShell>{children}</LensPanelDraggableShell>
+}
+
+/**
  * @param {{
  *   lensSessionId: number;
  *   lensOutput: Record<string, unknown>;
@@ -453,7 +538,7 @@ function LensPanelSuccess({
             lineHeight: 1.45,
           }}
         >
-          <strong style={{ color: '#FF6B35' }}>Low confidence ({conf.toFixed(2)})</strong>
+          <strong style={{ color: '#A81C1C' }}>Low confidence ({conf.toFixed(2)})</strong>
           — review axis mapping and chart type before rendering.
         </div>
       )}
@@ -521,21 +606,54 @@ function LensPanelSuccess({
         </div>
       )}
 
-      <div
-        style={{
-          display: 'inline-block',
-          padding: '4px 10px',
-          borderRadius: 999,
-          background: 'var(--ui-surface-chip)',
-          border: '1px solid var(--ui-accent-border)',
-          fontFamily: "'DM Mono', ui-monospace, monospace",
-          fontSize: 10,
-          color: 'var(--ui-accent)',
-          marginBottom: 14,
-        }}
-      >
-        {String(lensOutput.dataType ?? '')}
-      </div>
+      {(() => {
+        const rawType = String(lensOutput.dataType ?? '')
+        const meta = DATA_TYPE_META[rawType]
+        return (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              marginBottom: 14,
+              padding: '8px 12px',
+              borderRadius: 8,
+              background: 'var(--ui-surface-chip)',
+              border: '1px solid var(--ui-accent-border)',
+              color: 'var(--ui-accent)',
+            }}
+          >
+            {meta ? meta.icon : null}
+            <div style={{ minWidth: 0 }}>
+              <div
+                style={{
+                  fontFamily: "'DM Mono', ui-monospace, monospace",
+                  fontSize: 10,
+                  letterSpacing: '0.06em',
+                  fontWeight: 600,
+                  lineHeight: 1,
+                  marginBottom: meta ? 3 : 0,
+                }}
+              >
+                {meta ? meta.label : rawType}
+              </div>
+              {meta && (
+                <div
+                  style={{
+                    fontFamily: "'DM Mono', ui-monospace, monospace",
+                    fontSize: 9,
+                    color: 'var(--ui-text-subtle)',
+                    letterSpacing: '0.03em',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {meta.desc}
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })()}
 
       <div
         style={{

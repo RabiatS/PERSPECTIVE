@@ -1,5 +1,15 @@
 import { reshapeToSurfaceGrid } from './surfaceGrid.js'
 
+/** Rabiat v2: SCOUT = bloodline; correlation = muted rose (distinguishes marker shape) */
+const R_BLOOD = '#A81C1C'
+const R_BLOOD_MUTED = '#B85C5C'
+const R_HOVER_BG = 'rgba(20, 20, 20, 0.98)'
+const R_HOVER_BORDER = 'rgba(94, 234, 212, 0.4)'
+const R_BONE = '#F5F5F0'
+const R_HOVER_LIGHT_BG = 'rgba(255, 255, 255, 0.98)'
+const R_HOVER_LIGHT_BORDER = 'rgba(0, 107, 120, 0.35)'
+const R_INK = '#111116'
+
 export const MAX_ROWS_BEFORE_SAMPLE = 10000
 export const SAMPLE_SIZE = 5000
 
@@ -268,6 +278,15 @@ export function buildLayout(axisMapping, size, colorTheme = 'dark') {
       : {}),
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
+    hoverlabel: {
+      bgcolor: light ? R_HOVER_LIGHT_BG : R_HOVER_BG,
+      bordercolor: light ? R_HOVER_LIGHT_BORDER : R_HOVER_BORDER,
+      font: {
+        family: 'DM Mono, ui-monospace, monospace',
+        size: 11,
+        color: light ? R_INK : R_BONE,
+      },
+    },
     scene: {
       bgcolor: 'rgba(0,0,0,0)',
       xaxis: {
@@ -303,6 +322,15 @@ export function buildLayout2D(axisMapping, colorTheme = 'dark') {
     autosize: true,
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
+    hoverlabel: {
+      bgcolor: light ? R_HOVER_LIGHT_BG : R_HOVER_BG,
+      bordercolor: light ? R_HOVER_LIGHT_BORDER : R_HOVER_BORDER,
+      font: {
+        family: 'DM Mono, ui-monospace, monospace',
+        size: 11,
+        color: light ? R_INK : R_BONE,
+      },
+    },
     xaxis: {
       color: axisColor,
       gridcolor: gridColor,
@@ -384,8 +412,6 @@ export function computeDataCentroid(rows, axisMapping, detectedTypes) {
  * @param {Record<string, unknown>[]} rows
  * @param {{ x: string; y: string; z: string }} axisMapping
  * @param {[number, number, number]} centroid
- */
-/**
  * @param {Record<string, 'numeric' | 'categorical' | 'datetime'>} [detectedTypes]
  */
 export function computeDataBoundingRadius(
@@ -506,10 +532,10 @@ export function buildScoutSceneAnnotations(pins, colorTheme = 'dark') {
   return pins.map((p) => {
     const [px, py, pz] = p.position
     const isCorr = p.kind === 'correlation'
-    const accent = isCorr ? '#A81C1C' : '#FF6B35'
+    const accent = isCorr ? R_BLOOD_MUTED : R_BLOOD
     const kindLabel = isCorr ? 'CORRELATION' : 'SCOUT'
     const head = p.headline.length > 56 ? `${p.headline.slice(0, 54)}…` : p.headline
-    const text = `<b style="color:${accent};font-size:9px;letter-spacing:0.08em;">${kindLabel}</b><br><span style="color:${textMain};font-size:10px;">${escapeHtmlAttr(head)}</span>`
+    const text = `<b style="color:${accent};font-size:9px;letter-spacing:0.1em;font-family:Bebas Neue,system-ui,sans-serif;">${kindLabel}</b><br><span style="color:${textMain};font-size:10px;">${escapeHtmlAttr(head)}</span>`
     const cols = p.columns_involved?.length ? p.columns_involved.join(', ') : '—'
     const rowLabel =
       !isCorr && p.rowIndex >= 0 ? `row ${p.rowIndex}` : '—'
@@ -559,10 +585,10 @@ export function buildScoutCartesianAnnotations(pins, colorTheme = 'dark') {
   return pins.map((p) => {
     const [px, py] = p.position
     const isCorr = p.kind === 'correlation'
-    const accent = isCorr ? '#A81C1C' : '#FF6B35'
+    const accent = isCorr ? R_BLOOD_MUTED : R_BLOOD
     const kindLabel = isCorr ? 'CORRELATION' : 'SCOUT'
     const head = p.headline.length > 56 ? `${p.headline.slice(0, 54)}…` : p.headline
-    const text = `<b style="color:${accent};font-size:9px;letter-spacing:0.08em;">${kindLabel}</b><br><span style="color:${textMain};font-size:10px;">${escapeHtmlAttr(head)}</span>`
+    const text = `<b style="color:${accent};font-size:9px;letter-spacing:0.1em;font-family:Bebas Neue,system-ui,sans-serif;">${kindLabel}</b><br><span style="color:${textMain};font-size:10px;">${escapeHtmlAttr(head)}</span>`
     const cols = p.columns_involved?.length ? p.columns_involved.join(', ') : '—'
     const rowLabel =
       !isCorr && p.rowIndex >= 0 ? `row ${p.rowIndex}` : '—'
@@ -606,8 +632,8 @@ export function buildScoutCartesianAnnotations(pins, colorTheme = 'dark') {
 export function buildScoutPinTrace3d(pins, colorTheme = 'dark') {
   if (!pins.length) return null
   const light = colorTheme === 'light'
-  const outlier = '#FF6B35'
-  const correlation = '#C94C4C'
+  const outlier = R_BLOOD
+  const correlation = R_BLOOD_MUTED
   const xs = []
   const ys = []
   const zs = []
@@ -627,8 +653,8 @@ export function buildScoutPinTrace3d(pins, colorTheme = 'dark') {
         ? ` · row ${p.rowIndex}`
         : ''
     const tip = isCorr
-      ? `<b>Correlation</b><br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
-      : `<b>Outlier</b>${rowBit}<br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
+      ? `<b style="font-family:Bebas Neue,system-ui,sans-serif;letter-spacing:0.06em">Correlation</b><br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
+      : `<b style="font-family:Bebas Neue,system-ui,sans-serif;letter-spacing:0.06em">Outlier</b>${rowBit}<br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
     customdata.push(tip)
   }
   return {
@@ -642,13 +668,21 @@ export function buildScoutPinTrace3d(pins, colorTheme = 'dark') {
       size: 12,
       symbol: symbols,
       color: colors,
-      line: { width: 2, color: light ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.9)' },
+      line: { width: 2, color: light ? 'rgba(0,0,0,0.35)' : 'rgba(245,245,240,0.85)' },
       opacity: 1,
     },
     showlegend: false,
     customdata: customdata,
     hovertemplate: '%{customdata}<extra></extra>',
-    hoverlabel: { bgcolor: 'rgba(12,12,20,0.96)', font: { size: 11 } },
+    hoverlabel: {
+      bgcolor: light ? R_HOVER_LIGHT_BG : R_HOVER_BG,
+      bordercolor: light ? R_HOVER_LIGHT_BORDER : R_HOVER_BORDER,
+      font: {
+        family: 'DM Mono, ui-monospace, monospace',
+        size: 11,
+        color: light ? R_INK : R_BONE,
+      },
+    },
   }
 }
 
@@ -661,8 +695,8 @@ export function buildScoutPinTrace3d(pins, colorTheme = 'dark') {
 export function buildScoutPinTrace2d(pins, colorTheme = 'dark') {
   if (!pins.length) return null
   const light = colorTheme === 'light'
-  const outlier = '#FF6B35'
-  const correlation = '#C94C4C'
+  const outlier = R_BLOOD
+  const correlation = R_BLOOD_MUTED
   const xs = []
   const ys = []
   const symbols = []
@@ -680,8 +714,8 @@ export function buildScoutPinTrace2d(pins, colorTheme = 'dark') {
         ? ` · row ${p.rowIndex}`
         : ''
     const tip = isCorr
-      ? `<b>Correlation</b><br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
-      : `<b>Outlier</b>${rowBit}<br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
+      ? `<b style="font-family:Bebas Neue,system-ui,sans-serif;letter-spacing:0.06em">Correlation</b><br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
+      : `<b style="font-family:Bebas Neue,system-ui,sans-serif;letter-spacing:0.06em">Outlier</b>${rowBit}<br>${escapeHtmlAttr(p.explanation)}<br><i>${escapeHtmlAttr(p.suggested_action)}</i>`
     customdata.push(tip)
   }
   return {
@@ -694,11 +728,19 @@ export function buildScoutPinTrace2d(pins, colorTheme = 'dark') {
       size: 13,
       symbol: symbols,
       color: colors,
-      line: { width: 2, color: light ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.9)' },
+      line: { width: 2, color: light ? 'rgba(0,0,0,0.35)' : 'rgba(245,245,240,0.85)' },
     },
     showlegend: false,
     customdata: customdata,
     hovertemplate: '%{customdata}<extra></extra>',
-    hoverlabel: { bgcolor: 'rgba(12,12,20,0.96)', font: { size: 11 } },
+    hoverlabel: {
+      bgcolor: light ? R_HOVER_LIGHT_BG : R_HOVER_BG,
+      bordercolor: light ? R_HOVER_LIGHT_BORDER : R_HOVER_BORDER,
+      font: {
+        family: 'DM Mono, ui-monospace, monospace',
+        size: 11,
+        color: light ? R_INK : R_BONE,
+      },
+    },
   }
 }

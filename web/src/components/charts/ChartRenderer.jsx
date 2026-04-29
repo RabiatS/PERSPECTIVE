@@ -38,9 +38,13 @@ function toolbarBtnStyle(active) {
       ? '1px solid var(--ui-accent-border)'
       : '1px solid var(--ui-camera-btn-border)',
     color: active ? 'var(--ui-accent)' : 'var(--ui-text-subtle)',
+    boxShadow: active
+      ? '0 0 0 1px rgba(94, 234, 212, 0.08), 0 0 12px rgba(94, 234, 212, 0.15)'
+      : 'none',
     cursor: 'pointer',
     borderRadius: 4,
-    transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+    transition:
+      'background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease',
   }
 }
 
