@@ -6,10 +6,8 @@ import {
   buildGraphEdgeTrace3d,
   buildLayout,
   buildLayout2D,
-  buildScoutCartesianAnnotations,
   buildScoutPinTrace2d,
   buildScoutPinTrace3d,
-  buildScoutSceneAnnotations,
   buildTrace,
   buildTrace2D,
   computeSampleSeed,
@@ -101,6 +99,7 @@ function useChartTraces(_viewportSize, colorTheme) {
   const chartSpaceOrigin = useSceneStore((s) => s.chartSpaceOrigin)
   const plotlyViewPresetId = useSceneStore((s) => s.plotlyViewPresetId)
   const scoutPins = useSceneStore((s) => s.scoutPins)
+  const scoutVisible = useSceneStore((s) => s.scoutVisible)
 
   return useMemo(() => {
     if (
@@ -142,6 +141,8 @@ function useChartTraces(_viewportSize, colorTheme) {
         : subtractDataSpaceOrigin(raw.x, raw.y, raw.z, origin)
 
     const graphLinks = uploadedData.graphLinks
+    const visiblePins = scoutVisible ? scoutPins : []
+
     const traces3d = []
     if (activeChartType === 'graph3d' && graphLinks?.length) {
       const edge = buildGraphEdgeTrace3d(x, y, z, rowIndices, graphLinks)
@@ -149,8 +150,8 @@ function useChartTraces(_viewportSize, colorTheme) {
     }
     traces3d.push(buildTrace(activeChartType, { x, y, z }))
     const mainTraceIndex3d = traces3d.length - 1
-    if (activeChartType !== 'globe' && scoutPins.length > 0) {
-      const pin3d = buildScoutPinTrace3d(scoutPins, colorTheme)
+    if (activeChartType !== 'globe' && visiblePins.length > 0) {
+      const pin3d = buildScoutPinTrace3d(visiblePins, colorTheme)
       if (pin3d) traces3d.push(pin3d)
     }
 
@@ -161,8 +162,8 @@ function useChartTraces(_viewportSize, colorTheme) {
     }
     traces2d.push(buildTrace2D(activeChartType, { x, y, z }))
     const mainTraceIndex2d = traces2d.length - 1
-    if (activeChartType !== 'globe' && scoutPins.length > 0) {
-      const pin2d = buildScoutPinTrace2d(scoutPins, colorTheme)
+    if (activeChartType !== 'globe' && visiblePins.length > 0) {
+      const pin2d = buildScoutPinTrace2d(visiblePins, colorTheme)
       if (pin2d) traces2d.push(pin2d)
     }
 
@@ -171,23 +172,9 @@ function useChartTraces(_viewportSize, colorTheme) {
       _viewportSize?.width > 0 ? _viewportSize : undefined,
       colorTheme,
     )
-    const ann3d =
-      activeChartType !== 'globe' && scoutPins.length > 0
-        ? buildScoutSceneAnnotations(scoutPins, colorTheme)
-        : []
-    const layout3d = mergePlotlySceneCamera(
-      ann3d.length
-        ? { ...baseLayout, scene: { ...baseLayout.scene, annotations: ann3d } }
-        : baseLayout,
-      plotlyViewPresetId,
-    )
+    const layout3d = mergePlotlySceneCamera(baseLayout, plotlyViewPresetId)
 
-    const base2d = buildLayout2D(axisMapping, colorTheme)
-    const ann2d =
-      activeChartType !== 'globe' && scoutPins.length > 0
-        ? buildScoutCartesianAnnotations(scoutPins, colorTheme)
-        : []
-    const layout2d = ann2d.length ? { ...base2d, annotations: ann2d } : base2d
+    const layout2d = buildLayout2D(axisMapping, colorTheme)
 
     return {
       traces3d,
@@ -210,6 +197,7 @@ function useChartTraces(_viewportSize, colorTheme) {
     plotlyViewPresetId,
     colorTheme,
     scoutPins,
+    scoutVisible,
   ])
 }
 
@@ -229,9 +217,12 @@ export function ChartRenderer() {
  *   onOrbit: () => void;
  *   onSelect: () => void;
  *   onSwitch2D: () => void;
+ *   scoutVisible: boolean;
+ *   hasScout: boolean;
+ *   onToggleScout: () => void;
  * }} props
  */
-function ViewportToolbar({ orbitMode, onOrbit, onSelect, onSwitch2D }) {
+function ViewportToolbar({ orbitMode, onOrbit, onSelect, onSwitch2D, scoutVisible, hasScout, onToggleScout }) {
   return (
     <div
       style={{
@@ -277,6 +268,44 @@ function ViewportToolbar({ orbitMode, onOrbit, onSelect, onSwitch2D }) {
       >
         2D
       </button>
+      {hasScout && (
+        <>
+          <div
+            style={{
+              width: 1,
+              height: 16,
+              background: 'var(--ui-panel-border)',
+              margin: '0 4px',
+            }}
+          />
+          <button
+            type="button"
+            onClick={onToggleScout}
+            title={scoutVisible ? 'Hide SCOUT anomaly markers' : 'Show SCOUT anomaly markers'}
+            style={{
+              fontFamily: "'DM Mono', ui-monospace, monospace",
+              fontSize: 9,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              padding: '5px 10px',
+              background: scoutVisible ? 'rgba(168, 28, 28, 0.12)' : 'transparent',
+              border: scoutVisible
+                ? '1px solid rgba(168, 28, 28, 0.5)'
+                : '1px solid var(--ui-camera-btn-border)',
+              color: scoutVisible ? '#A81C1C' : 'var(--ui-text-subtle)',
+              boxShadow: scoutVisible
+                ? '0 0 10px rgba(168, 28, 28, 0.18)'
+                : 'none',
+              cursor: 'pointer',
+              borderRadius: 4,
+              transition:
+                'background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease',
+            }}
+          >
+            ◈ Scout
+          </button>
+        </>
+      )}
     </div>
   )
 }
@@ -295,6 +324,9 @@ export function Chart3DPanel() {
   const activeChartType = useSceneStore((s) => s.activeChartType)
   const setSelectedRowIndices = useSceneStore((s) => s.setSelectedRowIndices)
   const plotlyViewRevision = useSceneStore((s) => s.plotlyViewRevision)
+  const scoutVisible = useSceneStore((s) => s.scoutVisible)
+  const setScoutVisible = useSceneStore((s) => s.setScoutVisible)
+  const scoutPins = useSceneStore((s) => s.scoutPins)
   const shiftHeldRef = useShiftKeyHeld()
   const altOrbit = useAltOrbitPassthrough()
 
@@ -340,6 +372,9 @@ export function Chart3DPanel() {
           onOrbit={() => {}}
           onSelect={() => {}}
           onSwitch2D={() => setIs2DMode(true)}
+          scoutVisible={scoutVisible}
+          hasScout={scoutPins.length > 0}
+          onToggleScout={() => setScoutVisible(!scoutVisible)}
         />
         <div style={{ pointerEvents: 'auto', position: 'absolute', inset: 0 }}>
           <GlobeHtmlChart points={globePoints} />
@@ -359,6 +394,9 @@ export function Chart3DPanel() {
         onOrbit={() => setOrbitMode(true)}
         onSelect={() => setOrbitMode(false)}
         onSwitch2D={() => setIs2DMode(true)}
+        scoutVisible={scoutVisible}
+        hasScout={scoutPins.length > 0}
+        onToggleScout={() => setScoutVisible(!scoutVisible)}
       />
       <div
         style={{

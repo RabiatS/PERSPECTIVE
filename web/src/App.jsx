@@ -15,6 +15,7 @@ import { CameraPresets } from './components/ui/CameraPresets.jsx'
 import { XrEntry } from './components/ui/XrEntry.jsx'
 import { ThemeToggle } from './components/ui/ThemeToggle.jsx'
 import { SceneNavigateHint } from './components/ui/SceneNavigateHint.jsx'
+import { ScoutHud } from './components/ui/ScoutHud.jsx'
 import {
   SAMPLE_SPATIAL_DATASET_NAME,
   SAMPLE_SPATIAL_DATASET_URL,
@@ -106,6 +107,9 @@ export default function App() {
 
           {/* Sub-scene thumbnails */}
           <SubSceneManager />
+
+          {/* SCOUT anomaly insights panel — top-right */}
+          <ScoutHud />
         </div>
 
         {/* ── Right inspector sidebar ──────────────────────────────────── */}

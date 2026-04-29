@@ -139,6 +139,7 @@ export function VrSceneLayer() {
   const uploadSessionId = useSceneStore((s) => s.uploadSessionId)
   const datasetMeta = useSceneStore((s) => s.datasetMeta)
   const scoutPins = useSceneStore((s) => s.scoutPins)
+  const scoutVisible = useSceneStore((s) => s.scoutVisible)
 
   const cloud = useMemo(
     () => buildPointCloud(uploadedData, axisMapping, uploadSessionId),
@@ -233,7 +234,7 @@ export function VrSceneLayer() {
       </Text>
 
       {/* ── SCOUT anomaly / correlation pins ─────────────────────── */}
-      {scoutPins.map((pin) => {
+      {scoutVisible && scoutPins.map((pin) => {
         const vrPos = dataPosToVr(pin.position, xR, yR, zR)
         const accent = pin.kind === 'correlation' ? '#B85C5C' : '#A81C1C'
         return (

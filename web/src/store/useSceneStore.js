@@ -137,6 +137,11 @@ export const useSceneStore = create((set, get) => ({
   xrImmersiveActive: false,
   setXrImmersiveActive: (xrImmersiveActive) => set({ xrImmersiveActive }),
 
+  /** When false, SCOUT markers are hidden from the chart and ScoutHud is collapsed */
+  scoutVisible: true,
+  /** @param {boolean} v */
+  setScoutVisible: (v) => set({ scoutVisible: v }),
+
   /** Inactive tabs store a frozen workspace; the active tab has snapshot: null */
   datasetTabs: /** @type {{ id: string; name: string; snapshot: object | null }[]} */ ([]),
   /** @type {string | null} */
